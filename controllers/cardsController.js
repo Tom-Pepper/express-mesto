@@ -33,7 +33,44 @@ const deleteCard = (req, res) => {
         return res.status(404).send({ message: 'Карточка места не найдена' });
       }
       return res.status(200).send({ data: card });
-    });
+    })
+    .catch((err) => checkDataError(res, err));
 };
 
-module.exports = { getCards, createCard, deleteCard };
+const putLike = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка места не найдена' });
+      }
+      return res.status(200).send({ data: card });
+    })
+    .catch((err) => checkDataError(res, err));
+};
+
+const removeLike = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка места не найдена' });
+      }
+      return res.status(200).send({ data: card });
+    })
+    .catch((err) => checkDataError(res, err));
+};
+
+module.exports = {
+  getCards,
+  createCard,
+  deleteCard,
+  putLike,
+  removeLike,
+};
