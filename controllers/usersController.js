@@ -35,4 +35,39 @@ const createUser = (req, res) => {
     .catch((err) => checkDataError(res, err));
 };
 
-module.exports = { getUsers, getProfile, createUser };
+const getMyProfile = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.send(user))
+    .catch((err) => checkDataError(res, err));
+};
+
+const updateProfile = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true },
+  )
+    .then((user) => res.status(200).send(user))
+    .catch((err) => checkDataError(res, err));
+};
+
+const updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
+    .then((user) => res.status(200).send(user))
+    .catch((err) => checkDataError(res, err));
+};
+
+module.exports = {
+  getUsers,
+  getProfile,
+  createUser,
+  getMyProfile,
+  updateProfile,
+  updateAvatar,
+};
