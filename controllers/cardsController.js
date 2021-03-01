@@ -1,8 +1,5 @@
-// const path = require('path');
-// const getDataFromFile = require('../helpers/files.js');
 const Card = require('../models/card');
 
-// const dataPath = path.join(__dirname, '..', 'data', 'cards.json');
 const checkDataError = (res, err) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return res

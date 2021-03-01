@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
@@ -27,7 +26,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 })
   .then(() => console.log('Mesto is connected to DB'));
 
-app.use(express.static(path.join(__dirname, '/public')));
 app.use('/', cardsRoutes);
 app.use('/', usersRoutes);
 app.use('*', (req, res) => {
