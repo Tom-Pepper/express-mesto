@@ -16,7 +16,7 @@ const getUsers = (req, res) => {
 };
 
 const getProfile = (req, res) => {
-  User.findById(req.user._id)
+  User.findById(req.params.id)
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: 'Пользователь с таким id не найден' });
