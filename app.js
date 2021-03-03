@@ -12,6 +12,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Временно захардкоженный юзер
 app.use((req, res, next) => {
   req.user = {
     _id: '603cd4a43f98e078e9fbef81',
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Подключаем БД
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -26,6 +28,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 })
   .then(() => console.log('Mesto is connected to DB'));
 
+// Подключение роутов и обработка несуществующих роутов
 app.use('/', cardsRoutes, usersRoutes);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
