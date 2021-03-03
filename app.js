@@ -26,8 +26,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 })
   .then(() => console.log('Mesto is connected to DB'));
 
-app.use('/', cardsRoutes);
-app.use('/', usersRoutes);
+app.use('/', cardsRoutes, usersRoutes);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
