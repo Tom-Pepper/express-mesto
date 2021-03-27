@@ -5,8 +5,10 @@
  * @type {*|{}}
  */
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+// Функция проверки валидации. Использую в catch для каждого метода
 const checkDataError = (res, err) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return res
@@ -48,6 +50,26 @@ const createUser = (req, res) => {
     .catch((err) => checkDataError(res, err));
 };
 
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).send({ message: 'Пароль и email обязательны!' });
+  }
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'super-crypto-strong-passphrase',
+        { expiresIn: '7d' },
+      );
+      res.status(200).send({ token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
+
 const getMyProfile = (req, res) => {
   User.findById(req.user._id)
     .then((user) => res.send(user))
@@ -83,4 +105,5 @@ module.exports = {
   getMyProfile,
   updateProfile,
   updateAvatar,
+  loginUser,
 };
