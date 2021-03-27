@@ -1,3 +1,10 @@
+/**
+ * Контроллер пользователя. Описание методов работы с пользователями сервиса.
+ * Запись пользователя в БД, изменение данных, получение инф-ии о себе (залогиненный пользователь),
+ * и о др. пользователях по id
+ * @type {*|{}}
+ */
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const checkDataError = (res, err) => {
@@ -27,20 +34,14 @@ const getProfile = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
-  } = req.body;
-  User.create({
-    name,
-    about,
-    avatar,
-    email,
-    password,
-  })
+  bcrypt.hash(req.body.password, 10)
+    .then((_hash) => User.create({
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+      email: req.body.email,
+      password: _hash,
+    }))
     .then((user) => {
       res.status(200).send({ user });
     })
