@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users.js');
 const cardsRoutes = require('./routes/cards.js');
 
+const { loginUser, createUser, getMyProfile } = require('./controllers/usersController');
+const { auth } = require('./middlewares/auth');
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -12,13 +15,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Временно захардкоженный юзер
-app.use((req, res, next) => {
-  req.user = {
-    _id: '603cd4a43f98e078e9fbef81',
-  };
-  next();
-});
+app.post('/signin', loginUser);
+app.post('/signup', createUser);
+
+app.use(auth);
+
+app.get('/users/me', getMyProfile);
 
 // Подключаем БД
 mongoose.connect('mongodb://localhost:27017/mestodb', {
