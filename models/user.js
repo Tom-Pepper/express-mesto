@@ -13,18 +13,20 @@ const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]+\.[a-zA-Z0-9()]+([-a-z
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
     minlength: 2,
     maxlength: 30,
+    default: 'Tim Berners-Lee',
   },
   about: {
     type: String,
-    required: true,
+    required: false,
     minlength: 2,
     maxlength: 30,
+    default: 'Scientist, Inventor',
   },
   avatar: {
-    required: true,
+    required: false,
     type: String,
     validate: {
       validator(v) {
@@ -32,6 +34,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Введите корректный URL изображения',
     },
+    default: 'https://media.wired.com/photos/5c86f3dd67bf5c2d3c382474/4:3/w_2400,h_1800,c_limit/TBL-RTX6HE9J-(1).jpg',
   },
   email: {
     required: true,
