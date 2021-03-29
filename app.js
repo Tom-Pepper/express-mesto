@@ -67,14 +67,13 @@ app.use(errLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'Произошла ошибка на сервере'
-        : message,
-    });
+  const { message } = err;
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'Произошла ошибка на сервере'
+      : message,
+  });
   next();
 });
 

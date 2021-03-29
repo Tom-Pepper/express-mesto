@@ -9,4 +9,4 @@ class ConflictError extends Error {
   }
 }
 
-module.exports = { ConflictError };
+module.exports = ConflictError;

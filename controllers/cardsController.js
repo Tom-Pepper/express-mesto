@@ -3,8 +3,9 @@
  * Запись в БД, получение карт, удаление, лайки
  */
 const Card = require('../models/card');
-const { ForbiddenError } = require('../errors/notFoundError');
-const { NotFoundError } = require('../errors/notFoundError');
+const ForbiddenError = require('../errors/forbiddenError');
+const NotFoundError = require('../errors/notFoundError');
+const ValidationError = require('../errors/validationError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -14,9 +15,7 @@ const getCards = (req, res, next) => {
 
 const getCard = (req, res, next) => {
   Card.findOne({ _id: req.params.cardId })
-    .orFail(() => {
-      throw new NotFoundError('Карточка с таким id не найдена');
-    })
+    .orFail(() => new NotFoundError('Карточка с таким id не найдена'))
     .then((card) => {
       res.status(200).send({ card });
     })
@@ -35,20 +34,22 @@ const deleteCard = (req, res, next) => {
   const owner = req.user._id;
   Card
     .findOne({ _id: req.params.cardId })
+    .orFail(() => new NotFoundError('Карточка не найдена'))
     .then((card) => {
-      // if (!card) {
-      //   throw new NotFoundError('Карточка не найдена');
-      // }
       if (!card.owner.equals(owner)) {
-        throw new ForbiddenError('Нет прав на удаление этой карточки');
+        next(new ForbiddenError('Нет прав на удаление этой карточки'));
+      } else {
+        Card.deleteOne(card)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       }
-      return card;
     })
-    .then(() => {
-      Card.findOneAndRemove(req.params.cardId)
-        .then(() => res.status(200).send({ message: 'Карточка удалена' }));
-    })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Невалидный id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const putLike = (req, res, next) => {
@@ -59,9 +60,9 @@ const putLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка места не найдена');
+        next(new NotFoundError('Карточка места не найдена'));
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => next(err));
 };
@@ -74,7 +75,7 @@ const removeLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка места не найдена');
+        next(new NotFoundError('Карточка места не найдена'));
       }
       return res.status(200).send({ data: card });
     })
