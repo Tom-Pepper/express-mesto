@@ -62,9 +62,9 @@ const createUser = (req, res, next) => {
 const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
-  // if (!email || !password) {
-  //   res.status(400).send({ message: 'Пароль и email обязательны!' });
-  // }
+  if (!email || !password) {
+    throw new ValidationError('Пароль и email обязательны!');
+  }
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
