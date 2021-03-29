@@ -10,6 +10,7 @@ const {
   deleteCard,
   putLike,
   removeLike,
+  getCard,
 } = require('../controllers/cardsController.js');
 
 router.get('/', getCards);
@@ -24,6 +25,7 @@ router.post('/',
     }),
   }),
   createCard);
+router.get('/:cardId', getCard);
 router.delete('/:cardId',
   celebrate({
     params: Joi.object().keys({

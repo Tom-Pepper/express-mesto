@@ -12,6 +12,17 @@ const getCards = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+const getCard = (req, res, next) => {
+  Card.findOne({ _id: req.params.cardId })
+    .orFail(() => {
+      throw new NotFoundError('Карточка с таким id не найдена');
+    })
+    .then((card) => {
+      res.status(200).send({ card });
+    })
+    .catch((err) => next(err));
+};
+
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -25,16 +36,17 @@ const deleteCard = (req, res, next) => {
   Card
     .findOne({ _id: req.params.cardId })
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена');
-      }
-      if (card.owner.toString() !== owner) {
+      // if (!card) {
+      //   throw new NotFoundError('Карточка не найдена');
+      // }
+      if (!card.owner.equals(owner)) {
         throw new ForbiddenError('Нет прав на удаление этой карточки');
       }
-      return Card.findOneAndRemove(card._id)
-        .then(() => {
-          res.status(200).send({ message: 'Карточка удалена' });
-        });
+      return card;
+    })
+    .then(() => {
+      Card.findOneAndRemove(req.params.cardId)
+        .then(() => res.status(200).send({ message: 'Карточка удалена' }));
     })
     .catch((err) => next(err));
 };
@@ -75,4 +87,5 @@ module.exports = {
   deleteCard,
   putLike,
   removeLike,
+  getCard,
 };

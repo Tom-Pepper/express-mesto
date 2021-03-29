@@ -60,7 +60,7 @@ app.post('/signup',
 app.use('/users', auth, usersRoutes);
 app.use('/cards', auth, cardsRoutes);
 app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  res.status(404).send({ message: 'Страница не найдена' });
 });
 
 app.use(errLogger);
@@ -72,7 +72,7 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? 'Произошла ошибка на сервере'
         : message,
     });
   next();
