@@ -13,8 +13,9 @@ const cardsRoutes = require('./routes/cards.js');
 const { loginUser, createUser } = require('./controllers/usersController');
 const auth = require('./middlewares/auth');
 
-// const { PORT = 3000 } = process.env;
-const PORT = 3001;
+const { PORT = 3000 } = process.env;
+// Порт для теста локально
+// const PORT = 3001;
 const app = express();
 
 // Подключаем БД
