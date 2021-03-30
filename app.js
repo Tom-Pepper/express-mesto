@@ -13,8 +13,8 @@ const cardsRoutes = require('./routes/cards.js');
 const { loginUser, createUser } = require('./controllers/usersController');
 const auth = require('./middlewares/auth');
 
-const { PORT = 3000 } = process.env;
-
+// const { PORT = 3000 } = process.env;
+const PORT = 3001;
 const app = express();
 
 // Подключаем БД
@@ -57,8 +57,8 @@ app.post('/signup',
   }),
   createUser);
 
-app.use('/users', auth, usersRoutes);
-app.use('/cards', auth, cardsRoutes);
+app.use('/', auth, usersRoutes);
+app.use('/', auth, cardsRoutes);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
