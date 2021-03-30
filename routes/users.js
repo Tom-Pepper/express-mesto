@@ -12,10 +12,10 @@ const {
   getMyProfile,
 } = require('../controllers/usersController.js');
 
-router.get('/me', getMyProfile);
-router.get('/', getUsers);
-router.get('/:id', getProfile);
-router.patch('/me',
+router.get('/users/me', getMyProfile);
+router.get('/users', getUsers);
+router.get('/users/:id', getProfile);
+router.patch('/users/me',
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
@@ -23,7 +23,7 @@ router.patch('/me',
     }),
   }),
   updateProfile);
-router.patch('/me/avatar',
+router.patch('/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
       avatar: Joi.string().required()

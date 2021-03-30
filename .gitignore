@@ -9,7 +9,8 @@ node_modules
 # Optional npm cache directory
 .npm
 *.env
-secure.env
+.env
+package-lock.json
 
 # Optional REPL history
 .DS_Store
