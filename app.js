@@ -20,7 +20,7 @@ const auth = require('./middlewares/auth');
 // Защита от DDoS- атак
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000,
 });
 
 const { PORT = 3000 } = process.env;
