@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
     required: false,
     minlength: 2,
     maxlength: 30,
-    default: 'Tim Berners-Lee',
+    default: 'This is fine',
   },
   about: {
     type: String,
     required: false,
     minlength: 2,
     maxlength: 30,
-    default: 'Scientist, Inventor',
+    default: 'Set your name, avatar, about info',
   },
   avatar: {
     required: false,
